@@ -1,7 +1,7 @@
 /*
  * Board.h
  *
- *  Created on: 2014Äê6ÔÂ19ÈÕ
+ *  Created on: 2014ï¿½ï¿½6ï¿½ï¿½19ï¿½ï¿½
  *      Author: Liang
  */
 
@@ -9,7 +9,7 @@
 #define BOARD_H_
 
 #include <fstream>
-#include "Numlist.h"
+#include "NumList.h"
 
 
 using std::ifstream;
