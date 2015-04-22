@@ -1,11 +1,12 @@
 /*
  * FillStep.cpp
  *
- *  Created on: 2014Äê6ÔÂ19ÈÕ
+ *  Created on: 2014ï¿½ï¿½6ï¿½ï¿½19ï¿½ï¿½
  *      Author: Liang
  */
 
 #include "FillStep.h"
+#include "Board.h"
 
 
 using std::cout;

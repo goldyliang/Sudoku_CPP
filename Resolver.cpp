@@ -1,7 +1,7 @@
 /*
  * Resolver.cpp
  *
- *  Created on: 2014Äê6ÔÂ19ÈÕ
+ *  Created on: 2014ï¿½ï¿½6ï¿½ï¿½19ï¿½ï¿½
  *      Author: Liang
  */
 
@@ -11,11 +11,11 @@
 using std::cout;
 using std::endl;
 
-Resolver::Resolver(Board *bd) {
+Resolver::Resolver(Board *bd) : bd(bd), pDbgInfo(NULL) {
 
-	this->bd = bd;
+//	this->bd = bd;
 
-	pDbgInfo=NULL;
+//	pDbgInfo=NULL;
 
 	// Init the number candidate FillSteps for each (x,y) block
 	int i=0;
@@ -116,11 +116,16 @@ bool Resolver::solve(ostream * pDbgInfo, int maxResults) {
 			if (pDbgInfo)
 				currentStep->print(*pDbgInfo);
 
+
+
+			FillStepWithReverse * pStep=new FillStepWithReverse (
+					currentStep,*(this->bd));
 			currentStep->applyFill();
 
-			//bd->print(false,false);
+            if (pDbgInfo)
+                bd->print(*pDbgInfo,false,false);
 
-			solve_stack.push (currentStep);
+			solve_stack.push (pStep);
 		} else {
 
 			if (done) {
@@ -137,12 +142,21 @@ bool Resolver::solve(ostream * pDbgInfo, int maxResults) {
 
 			while (need_revert){
 				currentStep=NULL;
-				if (solve_stack.pop(currentStep)) {
-					currentStep->revertFill();
+
+				FillStepWithReverse * pStep;
+
+				if (solve_stack.pop(pStep)) {
+//					currentStep->revertFill();
+
+					currentStep = pStep->step;
+					(*this->bd) = pStep->bd_reverse;
+
+					delete pStep;
 
 					if (pDbgInfo) {
 						(*pDbgInfo) << "Reverted:";
 						currentStep->print(*pDbgInfo);
+						bd->print(*pDbgInfo,false,false);
 					}
 
 					if (currentStep->next()) {
@@ -151,16 +165,21 @@ bool Resolver::solve(ostream * pDbgInfo, int maxResults) {
 							currentStep->print(*pDbgInfo);
 						}
 
+						FillStepWithReverse * pStep=new FillStepWithReverse (
+								currentStep,*(this->bd));
 						currentStep->applyFill();
-						solve_stack.push(currentStep);
-//						bd->print(false,false);
+						solve_stack.push (pStep);
+
+			            if (pDbgInfo)
+			                bd->print(*pDbgInfo,false,false);
+
 						need_revert=false;
 					}
 				} else break;
 			};
 
 			if (!currentStep) {
-				cout << "All results showed." << endl;
+				cout << "All results showed. Total " << resultNum << endl;
 				finished=true; // no result
 			}
 		}

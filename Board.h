@@ -10,11 +10,9 @@
 
 #include <fstream>
 #include "NumList.h"
-
+#include "Area.h"
 
 using std::ifstream;
-
-class Area;
 
 class Board
 {
@@ -41,7 +39,7 @@ private:
 	void markUnFillable(int x, int y, int n);
 	int bd[10][10];
 	NumList candList[10][10];
-	Area* areas[3*9];
+	Area areas[3*9];
 	    // 0-8: rows 1-9, 9-17: cols 1-9, 18-26: sqr 1-9
 };
 

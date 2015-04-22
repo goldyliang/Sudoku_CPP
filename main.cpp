@@ -48,7 +48,7 @@ int main ()
 
 	Resolver sol(&bd);
 
-	sol.solve(&std::clog);
+	sol.solve(NULL); //&std::cout);
 
 	//bd.print(false,false);
 

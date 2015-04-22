@@ -1,19 +1,20 @@
 /*
  * Area.cpp
  *
- *  Created on: 2014Äê6ÔÂ19ÈÕ
+ *  Created on: 2014ï¿½ï¿½6ï¿½ï¿½19ï¿½ï¿½
  *      Author: Liang
  */
 
 #include "Area.h"
+#include "Board.h"
 #include <iostream>
 
 using std::cout;
 using std::endl;
 
-Area::Area(Board *bd, AreaType typ, int anum) {
+void Area::init(Board *bd, AreaType typ, int anum) {
 
-	this->bd=bd;
+//	this->bd=bd;
 	this->typ=typ;
 	this->anum=anum;
 
@@ -34,7 +35,7 @@ NumList* Area::getNumPosList (int n)
 	return &(numPosList[n]);
 }
 
-bool Area::isNumInArea (int n)
+/*bool Area::isNumInArea (int n)
 {
 	for (int i=1;i<=9;i++)
 	{
@@ -43,7 +44,7 @@ bool Area::isNumInArea (int n)
 		if (bd->get(x,y)==n) return true;
 	}
 	return false;
-}
+}*/
 
 
 void Area::getPos (int i, int &x, int &y)

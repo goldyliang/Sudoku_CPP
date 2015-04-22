@@ -1,7 +1,7 @@
 /*
  * Resolver.h
  *
- *  Created on: 2014Äê6ÔÂ19ÈÕ
+ *  Created on: 2014ï¿½ï¿½6ï¿½ï¿½19ï¿½ï¿½
  *      Author: Liang
  */
 
@@ -23,13 +23,21 @@ public:
 	bool solve(ostream * pDbgInfo=NULL,  int maxResults=0);
 
 private:
+
+	class FillStepWithReverse {
+	public:
+		FillStepWithReverse(FillStep * step, Board & bd_reverse) : step(step), bd_reverse(bd_reverse)
+		{}
+		FillStep * step;
+		Board bd_reverse;
+	};
 	Board *bd;
 
 	NumCandStep numCandSteps[COUNT_NUMCANDSTEPS];
 	PosCandStep posCandSteps[COUNT_POSCANDSTEPS];
 	FillStep * getBestStep(bool & done);
 
-	Stack <FillStep*> solve_stack;
+	Stack <FillStepWithReverse*> solve_stack;
 
 	ostream * pDbgInfo;
 

@@ -1,7 +1,7 @@
 /*
  * Board.cpp
  *
- *  Created on: 2014Äê6ÔÂ19ÈÕ
+ *  Created on: 2014ï¿½ï¿½6ï¿½ï¿½19ï¿½ï¿½
  *      Author: Liang
  */
 //#include <cstdio>
@@ -24,20 +24,20 @@ Board::Board()
 
 	int i=0;
 	for (int y=1;y<=9;y++)
-		areas[i++]=new Area(this,ROW,y);
+		areas[i++].init(this,ROW,y);
 
 	for (int x=1;x<=9;x++)
-		areas[i++]=new Area(this,COL,x);
+		areas[i++].init(this,COL,x);
 
 	for (int anum=1; anum<=9; anum++)
-		areas[i++]=new Area(this,SQR,anum);
+		areas[i++].init(this,SQR,anum);
 }
 
 Board::~Board()
 {
-	for (int i=0;i<27;i++)
+/*	for (int i=0;i<27;i++)
 		if (areas[i])
-			delete areas[i];
+			delete areas[i];*/
 }
 
 
@@ -203,12 +203,12 @@ NumList * Board::getFillableList (int x, int y)
 
 Area * Board::getRowArea(int y)
 {
-	return areas[y-1];
+	return &areas[y-1];
 }
 
 Area * Board::getColArea(int x)
 {
-	return areas[x+8];
+	return &areas[x+8];
 }
 
 Area * Board::getSqrArea(int x, int y)
@@ -216,7 +216,7 @@ Area * Board::getSqrArea(int x, int y)
 	int xx=(x-1)/3;  //0,1,2
 	int yy=(y-1)/3;
 
-	return areas[18+yy*3+xx];
+	return &areas[18+yy*3+xx];
 }
 
 void   Board::getThreeAreas(int x, int y, Area* ars[])
@@ -251,7 +251,7 @@ void   Board::print(ostream & os, bool cand, bool area)
 	if (area) {
 		os << "---- AREAS ----" << endl;
 		for (int i=0; i<27; i++) {
-			areas[i]->print(os);
+			areas[i].print(os);
 			os<< "---" << endl;
 		}
 	}
