@@ -1,7 +1,7 @@
 /*
  * FillStep.h
  *
- *  Created on: 2014Äê6ÔÂ19ÈÕ
+ *  Created on: 2014ï¿½ï¿½6ï¿½ï¿½19ï¿½ï¿½
  *      Author: Liang
  */
 
@@ -17,7 +17,7 @@ class FillStep {
 public:
 	FillStep();
 	virtual ~FillStep();
-	virtual int  candCount()=0;
+	virtual NUM_T  candCount()=0;
 	virtual void first()=0;
 	virtual bool next()=0;
 	virtual void print(ostream &os);
@@ -28,13 +28,14 @@ public:
 protected:
 	bool m_solved;
 	Board * bd;
-	int x,y,n;
+	NUM_T x,y,n;
 };
 
 class NumCandStep:public FillStep {
 public:
-	void init (Board * bd, int x, int y);
-	virtual int  candCount();
+    NumCandStep (Board * bd, NUM_T x, NUM_T y) : bd(bd), x(x), y(y) {};
+	void init (Board * bd, NUM_T x, NUM_T y);
+	virtual NUM_T  candCount();
 	virtual void first();
 	virtual bool next();
 	virtual void print(ostream & os);
@@ -43,8 +44,9 @@ public:
 
 class PosCandStep:public FillStep {
 	public:
-		void init (Board * bd, Area * ar, int n);
-		virtual int  candCount();
+        PosCandStep (Board * bd, Area * ar, NUM_T n);
+		void init (Board * bd, Area * ar, NUM_T n);
+		virtual NUM_T  candCount();
 		virtual void first();
 		virtual bool next();
 		virtual void print(ostream & os);
@@ -53,7 +55,7 @@ class PosCandStep:public FillStep {
 		Area * ar;
 		NumList * numList;
 
-		int curPos;
+		NUM_T curPos;
 
 };
 

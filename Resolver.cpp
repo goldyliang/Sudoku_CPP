@@ -7,28 +7,46 @@
 
 #include "Resolver.h"
 #include <iostream>
+#include <utility>
+#include <memory>
 
 using std::cout;
 using std::endl;
+
 
 Resolver::Resolver(Board *bd) : bd(bd), pDbgInfo(NULL) {
 
 //	this->bd = bd;
 
 //	pDbgInfo=NULL;
+//    std::vector <FillStepWithReverse *> stack_v;
+//    this->solve_stack = STACK_T (stack_v);
+//    this->solve_stack.
 
 	// Init the number candidate FillSteps for each (x,y) block
 	int i=0;
 	for (int x=1;x<=9;x++)
 		for (int y=1;y<=9;y++)
-			numCandSteps[i++].init (bd,x,y);
+		{
+#ifndef RESOLVER_STL_
+            numCandSteps[i++].init (bd,x,y);
+#else
+            FillSteps.push_back ( NumCandStep(bd,x,y) );
+#endif
+		}
 
 	i=0;
 
 	// Init the position candidate FillSteps for each column with number 1 to 9
 	for (int x=1;x<=9;x++)
 		for (int n=1;n<=9;n++)
+		{
+#ifndef RESOLVER_STL_
 			posCandSteps[i++].init (bd, bd->getColArea(x), n);
+#else
+			FillSteps.push_back ( PosCandStep(bd, bd->getColArea(x), n) );
+#endif
+		}
 
 	// Init the position candidate FillSteps for each row with number 1 to 9
 	for (int y=1;y<=9;y++)
@@ -50,6 +68,7 @@ FillStep * Resolver::getBestStep(bool & done) {
 	int minCandNum=10;
 	done=true;
 
+#ifndef RESOLVER_STL_
 	for (int i=0;i<COUNT_NUMCANDSTEPS;i++)
 		if (!numCandSteps[i].solved()) {
 			done=false;
@@ -69,6 +88,7 @@ FillStep * Resolver::getBestStep(bool & done) {
 				if (cnt<=1) break;
 			}
 		}
+
 
 	if (minCandNum>1) {
 		for (int i=0;i<COUNT_POSCANDSTEPS;i++)
@@ -92,6 +112,36 @@ FillStep * Resolver::getBestStep(bool & done) {
 				}
 			}
 	}
+#else
+
+	auto it = FillSteps.cbegin;
+	auto ed = FillSteps.cend;
+
+	while (it!=ed)
+	{
+        FillStep &st = *it;
+
+	    if (st.solved()) {
+            done=false;
+            int cnt=st.candCount();
+            if (cnt==0) {
+                if (pDbgInfo) {
+                    (*pDbgInfo) << "NoCand:";
+                    numCandSteps[i].print(*pDbgInfo);
+                    (*pDbgInfo) << endl;
+                }
+
+                return NULL;
+            }
+            if (cnt< minCandNum) {
+                minCandNum = cnt;
+                best = & (st);
+                if (cnt<=1) break;
+            }
+        }
+    }
+
+#endif
 
 	return best;
 }
@@ -117,15 +167,42 @@ bool Resolver::solve(ostream * pDbgInfo, int maxResults) {
 				currentStep->print(*pDbgInfo);
 
 
+#ifndef RESOLVER_STL_
 
 			FillStepWithReverse * pStep=new FillStepWithReverse (
-					currentStep,*(this->bd));
+					*currentStep,*(this->bd));
+#else
+			auto pStep = std::make_shared<FillStepWithReverse> (
+			        *currentStep,*(this->bd));
+#endif
+
+//			FillStepWithReverse stepRev(*currentStep, *(this->bd));
 			currentStep->applyFill();
 
             if (pDbgInfo)
+            {
                 bd->print(*pDbgInfo,false,false);
+                /*
+                cout<< "stepRev.bd before push" << endl;
+                stepRev.bd_reverse.print (*pDbgInfo,false,false);*/
+            }
 
-			solve_stack.push (pStep);
+//            cout << &(this->bd->[1][1]);
+//			solve_stack.push (std::move(stepRev));
+            //To optimize: only need push if the current step has more than one candidates
+            solve_stack.push (pStep);
+
+			/*
+			if (pDbgInfo)
+			{
+			    (*pDbgInfo) << "After push" << endl;
+			    //bd->print(*pDbgInfo,false,false);
+			    solve_stack.top().bd_reverse.print(*pDbgInfo,false,false);
+			}*/
+
+//            cout << &(this->bd[1][1]);
+//            cout << &(solve_stack.top().bd_reverse.bd[1][1]);
+
 		} else {
 
 			if (done) {
@@ -143,15 +220,40 @@ bool Resolver::solve(ostream * pDbgInfo, int maxResults) {
 			while (need_revert){
 				currentStep=NULL;
 
-				FillStepWithReverse * pStep;
+				if (!solve_stack.empty()) {
 
-				if (solve_stack.pop(pStep)) {
+				    /*
+				    if (pDbgInfo) {
+				        *pDbgInfo << "Stack top before moving" <<endl;
+				        solve_stack.top().bd_reverse.print(*pDbgInfo,false,false);
+				    }*/
+
+//	                FillStepWithReverse stepRev = std::move(solve_stack.top()); //* pStep;
+
+				    FillStep_Ptr pStep = solve_stack.top();
+
+	                /*
+                    if (pDbgInfo) {
+                        *pDbgInfo << "stepRev after moving" <<endl;
+                        stepRev.bd_reverse.print(*pDbgInfo,false,false);
+                        *pDbgInfo << "Stack top after moving" <<endl;
+                        solve_stack.top().bd_reverse.print(*pDbgInfo,false,false);
+                    }*/
+
+				    solve_stack.pop();
+
+
 //					currentStep->revertFill();
 
-					currentStep = pStep->step;
+					//currentStep = &stepRev.step;
+					currentStep = &pStep->step;
 					(*this->bd) = pStep->bd_reverse;
+					//(*this->bd) = stepRev.bd_reverse;
+					//(*this->bd) = std::move(stepRev.bd_reverse); // pStep->bd_reverse;
 
+#ifndef RESOLVER_STL_
 					delete pStep;
+#endif
 
 					if (pDbgInfo) {
 						(*pDbgInfo) << "Reverted:";
@@ -165,13 +267,29 @@ bool Resolver::solve(ostream * pDbgInfo, int maxResults) {
 							currentStep->print(*pDbgInfo);
 						}
 
-						FillStepWithReverse * pStep=new FillStepWithReverse (
+						/*FillStepWithReverse * pStep=new FillStepWithReverse (
 								currentStep,*(this->bd));
 						currentStep->applyFill();
-						solve_stack.push (pStep);
+						solve_stack.push (pStep); */
+
+#ifndef RESOLVER_STL_
+
+						FillStepWithReverse * pStep=new FillStepWithReverse (
+						        *currentStep,*(this->bd));
+#else
+						auto pStep = std::make_shared<FillStepWithReverse> (
+						        *currentStep,*(this->bd));
+#endif
+
+			            // FillStepWithReverse stepRev(*currentStep, *(this->bd));
+			            currentStep->applyFill();
+
+			            solve_stack.push (pStep);
+			            //solve_stack.push (std::move(stepRev));
 
 			            if (pDbgInfo)
-			                bd->print(*pDbgInfo,false,false);
+	                        if (pDbgInfo)
+	                            bd->print(*pDbgInfo,false,false);
 
 						need_revert=false;
 					}

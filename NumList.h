@@ -1,7 +1,7 @@
 /*
  * NumList.h
  *
- *  Created on: 2014Äê6ÔÂ19ÈÕ
+ *  Created on: 2014ï¿½ï¿½6ï¿½ï¿½19ï¿½ï¿½
  *      Author: Liang
  */
 
@@ -9,25 +9,57 @@
 #define NUMLIST_H_
 
 #include <iostream>
+#include <bitset>
+#include "common.h"
 
 using namespace std;
+
 
 class NumList {
 public:
 	NumList();
 
 	void makeFullList();
-	void add(int n);
-	void remove (int n);
-	bool in (int n);
-	int  numCount ();
 
-	int getFirst();
-	int getNext (int n);
+	void add(NUM_T n)  INLINE_CONF
+	{
+	    if (!b[n]) cnt++;
+	    b[n]=true;
+	}
+
+	void remove (NUM_T n) INLINE_CONF
+    {
+	    if (b[n]) cnt--;
+	    b[n]=false;
+	}
+
+
+	bool in (NUM_T n) INLINE_CONF
+    {
+	    return b[n];
+	}
+
+	NUM_T  numCount () INLINE_CONF
+    {
+	    return cnt;
+	}
+
+	NUM_T getFirst();
+	NUM_T getNext (NUM_T n);
 	void print(ostream & os);
 private:
-	int cnt;
+
+#ifndef NUMLIST_STL_
+
+	NUM_T cnt;
 	bool b[10];
+
+#else   // NUMLIST_STL_ defined
+	NUM_T cnt; //keep tracking the counter outside of std::bitset for performance consideration
+	std::bitset<10> b;
+#endif  // NUMLIST_STL_
+
+
 };
 
 #endif /* NUMLIST_H_ */

@@ -10,10 +10,21 @@
 
 #include "Board.h"
 #include "FillStep.h"
-#include "Stack.h"
 
-#define COUNT_NUMCANDSTEPS 81  // 9*9
-#define COUNT_POSCANDSTEPS (27*9)
+#ifndef RESOLVER_STL_
+#include "Stack.h"
+#else
+#include <stack>
+#include <vector>
+#include <memory>
+
+//#define STACK_T std::stack<FillStepWithReverse, std::vector<FillStepWithReverse>>
+
+#endif
+
+#include "common.h"
+
+
 
 class Resolver {
 public:
@@ -26,18 +37,36 @@ private:
 
 	class FillStepWithReverse {
 	public:
-		FillStepWithReverse(FillStep * step, Board & bd_reverse) : step(step), bd_reverse(bd_reverse)
-		{}
-		FillStep * step;
+		FillStepWithReverse(FillStep & step, Board & bd_reverse) : step(step), bd_reverse(bd_reverse) {};
+//		FillStepWithReverse( FillStepWithReverse &&st)  : step(st.step), bd_reverse(std::move(st.bd_reverse)) {};
+
+		FillStep & step;
 		Board bd_reverse;
 	};
+
+#ifndef RESOLVER_STL_
+    typedef FillStepWithReverse* FillStep_Ptr;
+    typedef Stack<FillStepWithReverse*> STACK_T;
+#else
+    typedef shared_ptr<FillStepWithReverse> FillStep_Ptr;
+    typedef std::stack<FillStep_Ptr, std::vector<FillStep_Ptr>> STACK_T;
+#endif
+
 	Board *bd;
 
+#ifndef RESOLVER_STL_
+	// Need improvement to better organize the steps and the algorithm of finding the best step
 	NumCandStep numCandSteps[COUNT_NUMCANDSTEPS];
 	PosCandStep posCandSteps[COUNT_POSCANDSTEPS];
-	FillStep * getBestStep(bool & done);
+#else
+	typedef vector <FillStep> FillStepList;
+	FillStepList FillSteps;
+#endif
 
-	Stack <FillStepWithReverse*> solve_stack;
+    FillStep * getBestStep(bool & done);
+
+
+	STACK_T solve_stack;
 
 	ostream * pDbgInfo;
 

@@ -1,7 +1,7 @@
 /*
  * stack.h
  *
- *  Created on: 2014Äê5ÔÂ28ÈÕ
+ *  Created on: 2014ï¿½ï¿½5ï¿½ï¿½28ï¿½ï¿½
  *      Author: Liang
  */
 
@@ -15,7 +15,10 @@ class Stack
 {
 	public:
 		void push (const DataType & dt);
-		bool pop(DataType& dt);
+		DataType& top();
+		void pop();
+		bool empty();
+		//bool pop(DataType& dt);
 		Stack ();
 		~Stack ();
 
@@ -25,7 +28,7 @@ class Stack
 			DataType d;
 			Node * next;
 		};
-		Node * top, * bottom;
+		Node * n_top, * n_bottom;
 		int node_cnt;
 
 };
@@ -36,7 +39,7 @@ template <typename DataType>
 Stack<DataType>::Stack()
 {
 	//std::clog << "Stack constructed.\n";
-	top=bottom=NULL;
+	n_top=n_bottom=NULL;
 	node_cnt=0;
 }
 
@@ -45,7 +48,7 @@ Stack<DataType>::~Stack()
 {
 	Node * pt;
 
-	pt=bottom;
+	pt=n_bottom;
 
 	while (pt) {
 		Node * pt_tmp=pt;
@@ -58,17 +61,23 @@ Stack<DataType>::~Stack()
 }
 
 template <typename DataType>
+bool Stack<DataType>::empty()
+{
+    return n_top==NULL;
+}
+
+template <typename DataType>
 void Stack<DataType>::push (const DataType & dt)
 {
 	Node * nw = new Node;
 	nw->d = dt;
 	//nw->next = NULL;
 
-	if (top) {
-		nw->next = top;
-		top = nw;
+	if (n_top) {
+		nw->next = n_top;
+		n_top = nw;
 	} else {
-		top = bottom = nw;
+		n_top = n_bottom = nw;
 		nw->next = NULL;
 	}
 
@@ -78,20 +87,25 @@ void Stack<DataType>::push (const DataType & dt)
 }
 
 template <typename DataType>
-bool Stack<DataType>::pop (DataType & dt)
+DataType& Stack<DataType>::top ()
 {
-	if (top) {
-		dt=top-> d;
-		Node * nd = top;
-		top = top -> next;
+    if (n_top) {
+        return n_top->d;
+    } else throw;
+}
+
+template <typename DataType>
+void Stack<DataType>::pop ()
+{
+	if (n_top) {
+		Node * nd = n_top;
+		n_top = n_top -> next;
 		delete nd;
-		if (!top) bottom=NULL;
+		if (!n_top) n_bottom=NULL;
 
 		node_cnt --;
 	//	std::clog << "Stack popped." << node_cnt << "\n";
-
-		return true;
-	} else return false;
+	}
 }
 
 #endif /* STACK_H_ */

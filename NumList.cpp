@@ -1,7 +1,7 @@
 /*
  * NumList.cpp
  *
- *  Created on: 2014Äê6ÔÂ19ÈÕ
+ *  Created on: 2014ï¿½ï¿½6ï¿½ï¿½19ï¿½ï¿½
  *      Author: Liang
  */
 
@@ -11,46 +11,27 @@
 using std::cout;
 using std::cerr;
 
+#ifndef NUMLIST_STL_
+
 NumList::NumList() {
 	// TODO Auto-generated constructor stub
 	cnt=0;
-	for (int n=1;n<=9;n++)
+	for (NUM_T n=1;n<=9;n++)
 		b[n]=false;
 }
 
-void NumList::add(int n)
-{
-	if (!b[n]) cnt++;
-	b[n]=true;
-}
 
-void NumList::remove (int n)
+NUM_T NumList::getFirst()
 {
-	if (b[n]) cnt--;
-	b[n]=false;
-}
-
-bool NumList::in (int n)
-{
-	return b[n];
-}
-
-int  NumList::numCount ()
-{
-	return cnt;
-}
-
-int NumList::getFirst()
-{
-	for (int n=1;n<=9;n++)
+	for (NUM_T n=1;n<=9;n++)
 		if (b[n])
 			return n;
 	return 0;
 }
 
-int NumList::getNext (int n)
+NUM_T NumList::getNext (NUM_T n)
 {
-	for (int nn=n+1;nn<=9;nn++)
+	for (NUM_T nn=n+1;nn<=9;nn++)
 		if (b[nn])
 			return nn;
 	return 0;
@@ -59,7 +40,7 @@ int NumList::getNext (int n)
 void NumList::makeFullList()
 {
 	cnt=9;
-	for (int n=1;n<=9;n++)
+	for (NUM_T n=1;n<=9;n++)
 		b[n]=true;
 }
 
@@ -67,8 +48,8 @@ void NumList::print(ostream & os)
 {
 //	if (os==NULL) os=(&cout);
 
-	int c=0;
-	for (int n=1;n<=9;n++) {
+	NUM_T c=0;
+	for (NUM_T n=1;n<=9;n++) {
 		if (b[n]) {
 			os << n;
 			c ++;
@@ -77,3 +58,53 @@ void NumList::print(ostream & os)
 	for (;c<=9;c++)
 		os << " ";
 }
+
+#else // NUMLIST_STL_ defined
+
+NumList::NumList() : cnt(0) {
+    // bitSet b shall be default initialized to all zero
+}
+
+
+
+NUM_T NumList::getFirst()
+{
+    return b._Find_first();
+//    for (NUM_T n=1;n<=9;n++)
+//        if (b[n])
+//            return n;
+//    return 0;
+}
+
+NUM_T NumList::getNext (NUM_T n)
+{
+    for (NUM_T nn=n+1;nn<=9;nn++)
+        if (b[nn])
+            return nn;
+    return 0;
+}
+
+void NumList::makeFullList()
+{
+    cnt=9;
+    for (NUM_T n=1;n<=9;n++)
+        b[n]=true;
+}
+
+void NumList::print(ostream & os)
+{
+//  if (os==NULL) os=(&cout);
+
+    NUM_T c=0;
+    for (NUM_T n=1;n<=9;n++) {
+        if (b[n]) {
+            os << n;
+            c ++;
+        }
+    }
+    for (;c<=9;c++)
+        os << " ";
+}
+
+#endif // NumList_STL
+

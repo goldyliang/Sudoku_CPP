@@ -42,14 +42,14 @@ void FillStep::print(ostream &os)
 	os << "(" << x << "," << y << ")-" << n << "---";
 }
 
-void NumCandStep::init (Board * bd, int x, int y)
+void NumCandStep::init (Board * bd, NUM_T x, NUM_T y)
 {
 	this->bd = bd;
 	this->x=x;
 	this->y=y;
 }
 
-int NumCandStep::candCount()
+NUM_T NumCandStep::candCount()
 {
 	return this->bd->getFillableList(x,y)->numCount();
 }
@@ -82,7 +82,12 @@ bool NumCandStep::solved()
 		return true;
 }
 
-void PosCandStep::init (Board * bd, Area * ar, int n)
+void PosCandStep::PosCandStep (Board * bd, Area * ar, NUM_T n)
+{
+    init (bd,ar,n);
+}
+
+void PosCandStep::init (Board * bd, Area * ar, NUM_T n)
 {
 	this->bd=bd;
 	this->ar=ar;
@@ -90,7 +95,7 @@ void PosCandStep::init (Board * bd, Area * ar, int n)
 	this->numList = ar->getNumPosList(n);
 }
 
-int PosCandStep::candCount()
+NUM_T PosCandStep::candCount()
 {
 	return numList->numCount();
 }

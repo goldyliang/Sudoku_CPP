@@ -17,6 +17,7 @@ int main ()
 
 //Test Board.cpp
 
+    cout << sizeof(Board);
 	Board bd;
 	ifstream fl;
 
@@ -48,7 +49,7 @@ int main ()
 
 	Resolver sol(&bd);
 
-	sol.solve(NULL); //&std::cout);
+	sol.solve(&std::cout);
 
 	//bd.print(false,false);
 

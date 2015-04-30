@@ -9,6 +9,7 @@
 #define AREA_H_
 
 #include <iostream>
+#include <array>
 #include "NumList.h"
 
 enum AreaType {ROW, COL, SQR};
@@ -17,22 +18,30 @@ class Board;
 
 class Area {
 public:
-//	Area(Board *bd, AreaType typ, int anum);
+//	Area(Board *bd, AreaType typ, NUM_T anum);
 
 //	NumList* getMissingNumList ();
-//	bool isNumInArea (int n);
-//	void addNumInArea (int n);
-	void init (Board *bd,AreaType typ, int anum);
-	NumList* getNumPosList (int n);
-	void getPos (int i, int &x, int &y);
-	void getPosIdx (int x, int y, int & i);
+//	bool isNumInArea (NUM_T n);
+//	void addNumInArea (NUM_T n);
+	void init (Board *bd,AreaType typ, NUM_T anum);
+	NumList* getNumPosList (NUM_T n);
+	void getPos (NUM_T i, NUM_T &x, NUM_T &y);
+	void getPosIdx (NUM_T x, NUM_T y, NUM_T & i);
 	void print(ostream &os);
 
 private:
 //	Board * bd;
+
 	AreaType typ;
-	int anum;
+    NUM_T anum;
+
+#ifndef AREA_STL_
+
 	NumList numPosList[10];
+
+#else
+	std::array <NumList,10> numPosList;
+#endif
 };
 
 #endif /* AREA_H_ */
