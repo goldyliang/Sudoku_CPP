@@ -1,53 +1,52 @@
 /*
  * Area.cpp
  *
- *  Created on: 2014ï¿½ï¿½6ï¿½ï¿½19ï¿½ï¿½
+ *  Created on: 2014Äê6ÔÂ19ÈÕ
  *      Author: Liang
  */
 
 #include "Area.h"
-#include "Board.h"
 #include <iostream>
 
 using std::cout;
 using std::endl;
 
-void Area::init(Board *bd, AreaType typ, NUM_T anum) {
+Area::Area(Board *bd, AreaType typ, int anum) {
 
-//	this->bd=bd;
+	this->bd=bd;
 	this->typ=typ;
 	this->anum=anum;
 
-	NUM_T x,y;
+	int x,y;
 
-	for (NUM_T i=1;i<=9;i++)
+	for (int i=1;i<=9;i++)
 	{
 		getPos(i,x,y);
-		for (NUM_T n=1;n<=9;n++)
+		for (int n=1;n<=9;n++)
 			if (bd->fillable(x,y,n)) {
 				numPosList[n].add(i);
 			}
 	}
 }
 
-NumList* Area::getNumPosList (NUM_T n)
+NumList* Area::getNumPosList (int n)
 {
 	return &(numPosList[n]);
 }
 
-/*bool Area::isNumInArea (NUM_T n)
+bool Area::isNumInArea (int n)
 {
-	for (NUM_T i=1;i<=9;i++)
+	for (int i=1;i<=9;i++)
 	{
-		NUM_T x,y;
+		int x,y;
 		getPos(i,x,y);
 		if (bd->get(x,y)==n) return true;
 	}
 	return false;
-}*/
+}
 
 
-void Area::getPos (NUM_T i, NUM_T &x, NUM_T &y)
+void Area::getPos (int i, int &x, int &y)
 {
 	switch (typ)
 	{
@@ -56,15 +55,15 @@ void Area::getPos (NUM_T i, NUM_T &x, NUM_T &y)
 	case COL:
 		x=anum; y=i; break;
 	case SQR:
-		NUM_T x0= (anum-1) % 3 * 3 + 1;
-		NUM_T y0 = (anum-1) / 3 * 3 + 1;
+		int x0= (anum-1) % 3 * 3 + 1;
+		int y0 = (anum-1) / 3 * 3 + 1;
 		x=x0 + (i-1) % 3;
 		y=y0 + (i-1) / 3;
 		break;
 	}
 }
 
-void Area::getPosIdx (NUM_T x, NUM_T y, NUM_T & i)
+void Area::getPosIdx (int x, int y, int & i)
 {
 	switch (typ)
 	{
@@ -81,8 +80,8 @@ void Area::getPosIdx (NUM_T x, NUM_T y, NUM_T & i)
 			i = 0;
 		break;
 	case SQR:
-		NUM_T x0= (anum-1) % 3 * 3 + 1;
-		NUM_T y0 = (anum-1) / 3 * 3 + 1;
+		int x0= (anum-1) % 3 * 3 + 1;
+		int y0 = (anum-1) / 3 * 3 + 1;
 		if (x>=x0 && x<x0+3 && y>=y0 && y<y0+3)
 			i = (y-y0)*3 + x-x0 + 1;
 		else
@@ -104,7 +103,7 @@ void Area::print(ostream & os)
 
 	os << anum << ":" << endl;
 
-	for (NUM_T n=1;n<=9;n++)
+	for (int n=1;n<=9;n++)
 	{
 		os<<n<<":";
 		numPosList[n].print(os);

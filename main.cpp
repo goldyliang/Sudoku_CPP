@@ -44,12 +44,14 @@ int main ()
 
 
 	cout << "Initial State:" << endl;
-	bd.print(cout,false,false);
+	bd.print(cout);//,false,false);
 	cout << endl;
 
 	Resolver sol(&bd);
 
-	sol.solve(&std::cout);
+	sol.solve(
+	        NULL,false);
+	//&std::cout,false);//true);//NULL,false);//&std::cout,false);
 
 	//bd.print(false,false);
 

@@ -18,7 +18,10 @@ using std::ifstream;
 
 #ifdef BOARD_STL_
 
-#define ARRAY_9_9_T( _etyp_)  std::array < std::array<_etyp_, 10> , 10>
+//template <class etyp_>
+//using ARRAY_9_9_T = std::array <std::array<etyp_,10>,10>;
+
+//#define ARRAY_9_9_T( _etyp_)  std::array < std::array<_etyp_, 10> , 10>
 //#define ARRAY_9_9_T( _etyp_)  std::vector < std::vector<_etyp_>>
 #endif
 
@@ -36,26 +39,25 @@ public:
 	    return *this;
 	}*/
 
-	~Board();
+/*	Board (Board&brd);
+	Board( Board&& brd) noexcept;
+	Board & operator = (const Board & brd);
+	Board & operator = (Board && brd) noexcept;*/
 	bool initBoard(istream &f);
 
 	bool fill (NUM_T x, NUM_T y, NUM_T n);
 	bool fillable (NUM_T x, NUM_T y, NUM_T n);
 	bool erase (NUM_T x, NUM_T y);
 	NUM_T  get (NUM_T x, NUM_T y);
-	NumList * getFillableList (NUM_T x, NUM_T y);
+	//NumList * getFillableList (NUM_T x, NUM_T y);
 
-	Area * getRowArea(NUM_T y);
-	Area * getColArea(NUM_T x);
-	Area * getSqrArea(NUM_T x, NUM_T y);
-	void   getThreeAreas(NUM_T x, NUM_T y, Area* ars[]);
+
 
 	bool   valid();
-	void   print(ostream & os, bool cand, bool area);
+	void   print(ostream & os);//, bool cand, bool area);
 
 private:
-	void updateFillable(NUM_T x, NUM_T y, NUM_T n);
-	void markUnFillable(NUM_T x, NUM_T y, NUM_T n);
+
 
 #ifndef BOARD_STL_
 	NUM_T bd[10][10];
@@ -63,10 +65,15 @@ private:
 	Area areas[3*9];
 	    // 0-8: rows 1-9, 9-17: cols 1-9, 18-26: sqr 1-9
 #else
-	ARRAY_9_9_T (NUM_T)  bd;
-	ARRAY_9_9_T (NumList) candList;
-    std::array<Area, 3*9> areas;
+	//TO be improve: it can be moved
+	//ARRAY_9_9_T <NUM_T>  bd;
+	vector < array <NUM_T, 10> > bd;
+
 #endif
+
+	friend class Resolver;
+
+
 };
 
 istream &operator >> (istream &is, Board &bd);

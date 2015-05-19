@@ -34,19 +34,25 @@ public:
 	}
 
 
-	bool in (NUM_T n) INLINE_CONF
+	bool in (NUM_T n) const INLINE_CONF
     {
 	    return b[n];
 	}
 
-	NUM_T  numCount () INLINE_CONF
+	NUM_T  numCount () const INLINE_CONF
     {
 	    return cnt;
 	}
 
-	NUM_T getFirst();
-	NUM_T getNext (NUM_T n);
-	void print(ostream & os);
+	void clear() INLINE_CONF
+	{
+	    b.reset();
+	    cnt=0;
+	}
+
+	NUM_T getFirst() const;
+	NUM_T getNext (NUM_T n) const;
+	void print(ostream & os) const;
 private:
 
 #ifndef NUMLIST_STL_

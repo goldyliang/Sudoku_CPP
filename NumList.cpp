@@ -67,7 +67,7 @@ NumList::NumList() : cnt(0) {
 
 
 
-NUM_T NumList::getFirst()
+NUM_T NumList::getFirst() const
 {
     return b._Find_first();
 //    for (NUM_T n=1;n<=9;n++)
@@ -76,7 +76,7 @@ NUM_T NumList::getFirst()
 //    return 0;
 }
 
-NUM_T NumList::getNext (NUM_T n)
+NUM_T NumList::getNext (NUM_T n) const
 {
     for (NUM_T nn=n+1;nn<=9;nn++)
         if (b[nn])
@@ -91,7 +91,7 @@ void NumList::makeFullList()
         b[n]=true;
 }
 
-void NumList::print(ostream & os)
+void NumList::print(ostream & os) const
 {
 //  if (os==NULL) os=(&cout);
 
