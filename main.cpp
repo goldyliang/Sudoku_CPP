@@ -21,7 +21,7 @@ int main ()
 	Board bd;
 	ifstream fl;
 
-	fl.open("bd.txt");
+	fl.open("input/bd.txt");
 //	if (fl.is_open())
 //	{
 	//bd.initBoard (cin);

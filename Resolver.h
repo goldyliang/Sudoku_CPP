@@ -17,6 +17,7 @@
 #include <stack>
 #include <vector>
 #include <memory>
+#include <pthread.h>
 
 //#define STACK_T std::stack<FillStepWithReverse, std::vector<FillStepWithReverse>>
 
@@ -32,6 +33,8 @@ public:
 //	~Resolver();
 
 	bool solve(ostream * pDbgInfo=NULL,  bool bStatInfo=false, int maxResults=0);
+
+
 
 private:
 
@@ -92,6 +95,10 @@ private:
 
     int cPush;
     int cPop;
+
+    static unsigned getMaxThreads();
+    static unsigned cAvailThreads; // will get initialized when the first object created
+    pthread_mutex_t mtxAvailThreads;
 
     friend class FillStep;
     friend class NumCandStep;

@@ -351,6 +351,9 @@ FillStepList& FillStepList:: operator = (FillStepList && ls) noexcept
     posCandSteps=std::move(ls.posCandSteps);
     pStep = ls.pStep;
 
+    this->m_list=std::move(ls.m_list);
+
+    /*
     this->m_list.resize(10);
 
     for (NUM_T n=1;n<=9;n++)
@@ -372,7 +375,7 @@ FillStepList& FillStepList:: operator = (FillStepList && ls) noexcept
             if (!st.solved)
                 st.it = add (&st);
             else st.it = m_list[st.candCount()].end();
-        }
+        } */
     return *this;
 }
 
@@ -534,6 +537,16 @@ bool FillStepList::markSolved (NUM_T x, NUM_T y, NUM_T n)
 
     // TODO, move numCandSteps[x][y]
 
+    Area::forEachThreeAreas (x,y,
+            [&] (const Area &a) -> bool  {
+        NUM_T i;
+        a.getPosIdx(x,y,i);
+        int aid=a.getID();
+        markSolvedAndMove (&posCandSteps[aid][n]);
+        return true;
+    } );
+
+    /*
     Area ars[3];
     Area::getThreeAreas(x,y,ars);
 
@@ -544,7 +557,7 @@ bool FillStepList::markSolved (NUM_T x, NUM_T y, NUM_T n)
         int aid=ars[ari].getID();
 
         markSolvedAndMove (&posCandSteps[aid][n]);
-    }
+    } */
 
     return true;
 }
@@ -560,6 +573,24 @@ bool FillStepList::markUnFillable (NUM_T x, NUM_T y, NUM_T n)
 
     // TODO, move numCandSteps[x][y]
 
+    return Area::forEachThreeAreas ( x, y,
+            [&] (const Area & a) ->bool {
+
+        NUM_T i;
+        a.getPosIdx(x,y,i);
+        int aid=a.getID();
+
+        if (n>0)
+            return removeCandAndMove (&posCandSteps[aid][n],i);
+        else {
+            for (NUM_T nn=1;nn<=9;nn++)
+                 if (!removeCandAndMove( &posCandSteps[aid][nn], i))
+                    return false;
+            return true;
+        }
+    } );
+
+    /*
     Area ars[3];
     Area::getThreeAreas(x,y,ars);
 
@@ -579,7 +610,7 @@ bool FillStepList::markUnFillable (NUM_T x, NUM_T y, NUM_T n)
                  if (!removeCandAndMove( &posCandSteps[aid][nn], i))
                     return false;
     }
-    return true;
+    return true; */
 }
 
 

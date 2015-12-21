@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <array>
+#include <functional>
 #include "NumList.h"
 
 enum AreaType {ROW, COL, SQR};
@@ -64,6 +65,18 @@ public:
         return 18+yy*3+xx;
     }
 
+	static bool forEachThreeAreas(NUM_T x, NUM_T y, std::function <bool(const Area &a)> f )
+	        //void (*f) (const Area & a))
+	{
+	    if (!f (Area(ROW,y))) return false;
+
+	    if (!f (Area (COL,x))) return false;
+
+	    if (!f (Area (SQR,x,y))) return false;
+
+	    return true;
+	}
+
 	static void getThreeAreas(NUM_T x, NUM_T y, Area ars[])
 	{
 	    ars[0]=Area(ROW,y);
@@ -94,7 +107,7 @@ public:
 	    }
 	}
 
-	void getPosIdx (NUM_T x, NUM_T y, NUM_T & i)
+	void getPosIdx (NUM_T x, NUM_T y, NUM_T & i) const
 	{
 	    switch (typ)
 	    {
@@ -121,7 +134,7 @@ public:
 	    }
 	}
 
-	int  getID()
+	int  getID() const
 	{
 	    return Area::getID(typ,anum);
 	}

@@ -10,10 +10,17 @@
 #include <utility>
 #include <memory>
 #include <algorithm>
+#include <thread>
 
 using std::cout;
 using std::endl;
 
+unsigned Resolver::cAvailThreads=Resolver::getMaxThreads(); // will get initialized when the first object created
+
+unsigned Resolver::getMaxThreads ()
+{
+    return std::thread::hardware_concurrency();
+}
 
 Resolver::Resolver(Board *p_bd) : FillSteps(), pDbgInfo(NULL), cPush(0), cPop(0) {
 

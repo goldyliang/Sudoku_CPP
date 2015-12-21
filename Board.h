@@ -16,33 +16,11 @@
 
 using std::ifstream;
 
-#ifdef BOARD_STL_
-
-//template <class etyp_>
-//using ARRAY_9_9_T = std::array <std::array<etyp_,10>,10>;
-
-//#define ARRAY_9_9_T( _etyp_)  std::array < std::array<_etyp_, 10> , 10>
-//#define ARRAY_9_9_T( _etyp_)  std::vector < std::vector<_etyp_>>
-#endif
-
 class Board
 {
 public:
 	Board();
-//	Board (const Board & b) : bd(b.bd), candList(b.candList), areas(b.areas) {};
-//	Board (Board && b) : bd(std::move(b.bd)), candList(std::move(b.candList)), areas(std::move(b.areas)) {};
 
-/*	Board& operator = (const Board& other) {
-	    bd = other.bd;
-	    candList = other.candList;
-	    areas = other.areas;
-	    return *this;
-	}*/
-
-/*	Board (Board&brd);
-	Board( Board&& brd) noexcept;
-	Board & operator = (const Board & brd);
-	Board & operator = (Board && brd) noexcept;*/
 	bool initBoard(istream &f);
 
 	bool fill (NUM_T x, NUM_T y, NUM_T n);
